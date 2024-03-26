@@ -26,6 +26,7 @@ class AppLayout:
     start_button: ttk.Button
     stop_button: ttk.Button
     toggle_button: ttk.Button
+    clear_button: ttk.Button
     status_label: ttk.Label
     packets_list: ttk.Treeview
 
@@ -44,7 +45,13 @@ class AppLayout:
         self.start_button = ttk.Button(controls_frame, text='Start')
         self.stop_button = ttk.Button(controls_frame, text='Stop')
         self.toggle_button = ttk.Button(controls_frame, text='Toggle')
-        btns = [self.start_button, self.stop_button, self.toggle_button]
+        self.clear_button = ttk.Button(controls_frame, text='Clear')
+        btns = [
+            self.start_button,
+            self.stop_button,
+            self.toggle_button,
+            self.clear_button,
+        ]
         for button in btns:
             button.pack(side=tk.LEFT)
         self.status_label = ttk.Label(controls_frame, text='Off')
@@ -52,4 +59,16 @@ class AppLayout:
         controls_frame.pack(side=tk.TOP, fill='x')
 
     def _build_packets_list(self) -> None:
-        ...
+        columns = ('Value', )
+        self.packets_list = ttk.Treeview(self.window, columns=columns)
+        for column in columns:
+            self.packets_list.heading(column, text=column)
+        self.packets_list.pack(side=tk.LEFT, fill='both', expand=True)
+        scrollbar = ttk.Scrollbar(
+            self.window,
+            orient=tk.VERTICAL,
+            command=self.packets_list.yview,
+        )
+        self.packets_list.config(yscrollcommand=scrollbar.set)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        self.packets_list.config(padding=20)

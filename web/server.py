@@ -8,6 +8,8 @@ from threading import Thread, Event
 import http.server
 import socketserver
 import os
+import websockets
+from scapy.all import *
 
 
 def run_static_server(port: int) -> Thread:
@@ -34,3 +36,20 @@ def run_static_server(port: int) -> Thread:
     server_thread.start()
     started_event.wait()
     return server_thread
+
+
+class WebSocketServer:
+    '''Instantiates ws server'''
+    _port: int
+    _sniffer: AsyncSniffer
+    _clients: set[websockets.WebSocketServerProtocol]
+
+    def __init__(self, port: int) -> None:
+        self._port = port
+        self._clients = set()
+        # TODO: instantiate sniffer
+
+    def run(self) -> None:
+        '''Starts the server'''
+        # TODO: start the server
+        print('Running websocket server...')

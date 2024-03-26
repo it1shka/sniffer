@@ -5,6 +5,7 @@ for running sniffer in browser
 
 
 from .server import run_static_server
+from .server import WebSocketServer
 from dotenv import load_dotenv
 import os
 import webbrowser
@@ -38,5 +39,7 @@ def run_browser() -> None:
     load_dotenv()
     static_port, websocket_port = get_ports()
     thread = run_static_server(static_port)
+    server = WebSocketServer(websocket_port)
+    server.run()
     webbrowser.open(f'localhost:{static_port}')
     thread.join()

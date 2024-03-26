@@ -8,6 +8,18 @@
     <link rel="stylesheet" href="/styles.css">
   </head>
   <body>
-	<script defer src="/main.js"></script>
+    <main class="app-container">
+      <header class="app-header">
+        <button id="btn-start"  class="control-button">Start </button>
+        <button id="btn-stop"   class="control-button">Stop  </button>
+        <button id="btn-toggle" class="control-button">Toogle</button>
+        <button id="btn-clear"  class="control-button">Clear </button>
+        <h2 class="control-status">Off</h2>
+      </header>
+      <ul class="packets-list">
+        <!-- packets go here -->
+      </ul>
+    </main>
+	  <script defer type="module" src="/main.js"></script>
   </body>
 </html>

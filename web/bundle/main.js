@@ -110,8 +110,6 @@ const makeTogglable = (parent, container, opened = false) => {
 // for DOM elements creation
 class Creator {
   createPacketElement = packet => {
-    console.dir(packet)
-
     const container = document.createElement('div')
     container.classList.add('packet')
     
@@ -163,7 +161,9 @@ class Creator {
       field.appendChild(keyElement)
 
       const valueElement = document.createElement('p')
-      valueElement.textContent = value
+      valueElement.textContent = /^b["|']/.test(value)
+        ? value.slice(2, -1)
+        : value
       field.appendChild(valueElement)
     }
     

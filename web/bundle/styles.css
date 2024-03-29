@@ -105,6 +105,7 @@ body {
 }
 
 .packet-field > p {
+  display: block;
   flex: 1;
   max-width: 50%;
   word-wrap: break-word;

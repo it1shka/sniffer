@@ -55,6 +55,7 @@ class WebSocketServer:
         '''Processes packet from sniffer and broadcasts it'''
         layers = packet.layers()
         packet_title = layers[-1].__name__
+        packet_size = len(packet)
         layers_info = {}
         for layer in layers:
             field_names = map(lambda e: e.name, layer.fields_desc)
@@ -63,6 +64,7 @@ class WebSocketServer:
             layers_info[layer.__name__] = layer_info
         output = {
             'packet_title': packet_title,
+            'packet_size': packet_size,
             'layers': layers_info,
         }
         self._broadcast(json.dumps(output))

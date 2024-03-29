@@ -6,4 +6,106 @@
 
 body {
   font-family: sans-serif;
+  background-color: #eee;
+  display: grid;
+  place-items: center;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  width: min(720px, 100vw);
+  height: 100vh;
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
+}
+
+.app-header {
+  display: flex;
+  padding: 1em 2em;
+  box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px;
+  position: relative;
+  z-index: 100;
+}
+
+.app-header > * + * {
+  margin-left: 0.5em;
+  align-items: center;
+}
+
+.control-button {
+  border: none;
+  width: 60px;
+}
+
+.control-status {
+  margin-left: auto;
+  color: grey;
+}
+
+.control-status::before {
+  content: "Status: ";
+}
+
+.packets-list {
+  overflow-y: auto;
+  flex: 1;
+}
+
+.packet {
+  padding: 0.5em 1em;
+  border-bottom: 1px solid #ccc;
+  background-color: white;
+}
+
+.packet-header {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.packet-header > .packet-icon {
+  height: 30px;
+  width: auto;
+  margin-right: 1em;
+}
+
+.packet-header > .packet-size {
+  margin-left: auto;
+}
+
+.packet-header > .packet-size::after {
+  content: " bytes";
+}
+
+.packet-layer {
+  padding: 0.25em 0.5em;
+  color: grey;
+}
+
+.packet-layers {
+  padding-left: 3.5em;
+}
+
+.packet-layer-title {
+  cursor: pointer;
+  user-select: none;
+}
+
+.packet-fields {
+  padding-left: 2em;
+}
+
+.packet-field {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.packet-field > p {
+  flex: 1;
+  max-width: 50%;
+  word-wrap: break-word;
 }

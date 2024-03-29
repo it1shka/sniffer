@@ -50,8 +50,165 @@ const useRemoteConnection = handler => {
   connect()
 }
 
+const PACKETS_SCHEMA = Object.freeze({
+  ether: {
+    image: 'ethernet.png',
+    color: '#91291c',
+  },
+  ip: {
+    image: 'ip.png',
+    color: '#914f1c',
+  },
+  tcp: {
+    image: 'tcp.png',
+    color: '#8c6a1b',
+  },
+  udp: {
+    image: 'udp',
+    color: '#878518',
+  },
+  icmp: {
+    image: 'icmp.png',
+    color: '#6d8f1d',
+  },
+  dns: {
+    image: 'dns.png',
+    color: '#3a8a1a',
+  },
+  raw: {
+    image: 'raw.png',
+    color: '#1a8a68',
+  },
+  arp: {
+    image: 'arp.png',
+    color: '#185d85',
+  },
+  dhcp: {
+    image: 'dhcp.png',
+    color: '#451885',
+  },
+  default: {
+    image: 'packet-icon.png',
+    color: 'grey',
+  }
+})
+
+const makeTogglable = (parent, container, opened = false) => {
+  parent.onclick = event => {
+    event.stopPropagation()
+    for (let i = 0; i < container.children.length; i++) {
+      const child = container.children[i]
+      child.style.display = opened 
+        ? 'none'
+        : 'block'
+    }
+    opened = !opened
+  }
+}
+
+// class that will be used
+// for DOM elements creation
+class Creator {
+  createPacketElement = packet => {
+    console.dir(packet)
+
+    const container = document.createElement('div')
+    container.classList.add('packet')
+    
+    const header = this.createPacketHeader(packet)
+    container.appendChild(header)
+
+    const layersContainer = document.createElement('div')
+    layersContainer.classList.add('packet-layers')
+    makeTogglable(header, layersContainer)
+    container.appendChild(layersContainer)
+
+    const layers = Object.entries(packet.layers)
+    for (const [layer, fields] of layers) {
+      const layerElement = this.createLayer(layer, fields)
+      layerElement.style.display = 'none'
+      layersContainer.appendChild(layerElement)
+    }
+
+    return container
+  }
+
+  createLayer = (layer, fieldsObject) => {
+    const container = document.createElement('div')
+    container.classList.add('packet-layer')
+    
+    const title = document.createElement('h4')
+    title.classList.add('packet-layer-title')
+    title.textContent = layer
+    container.appendChild(title)
+
+    const fieldsContainer = document.createElement('div')
+    fieldsContainer.classList.add('packet-fields')
+    makeTogglable(title, fieldsContainer)
+    container.appendChild(fieldsContainer)
+
+    const fields = Object.entries(fieldsObject)
+    for (const [key, value] of fields) {
+      const wrapper = document.createElement('div')
+      wrapper.style.width = '100%'
+      wrapper.style.display = 'none'
+      fieldsContainer.appendChild(wrapper)
+
+      const field = document.createElement('div')
+      field.classList.add('packet-field')
+      wrapper.appendChild(field)
+
+      const keyElement = document.createElement('p')
+      keyElement.textContent = key
+      field.appendChild(keyElement)
+
+      const valueElement = document.createElement('p')
+      valueElement.textContent = value
+      field.appendChild(valueElement)
+    }
+    
+    return container
+  }
+
+  createPacketHeader = packet => {
+    const packetTitle = packet.packet_title
+    const packetSize = packet.packet_size
+
+    const header = document.createElement('div')
+    header.classList.add('packet-header')
+
+    let { image, color } = (() => {
+      const key = packetTitle.toLowerCase()
+      if (key in PACKETS_SCHEMA) {
+        return PACKETS_SCHEMA[key]
+      }
+      return PACKETS_SCHEMA.default
+    })()
+
+    const icon = document.createElement('img')
+    icon.classList.add('packet-icon')
+    icon.src = `/icons/${image}`
+    header.appendChild(icon)
+
+    const title = document.createElement('h3')
+    title.classList.add('packet-title')
+    title.textContent = packetTitle
+    title.style.color = color
+    header.appendChild(title)
+
+    const size = document.createElement('p')
+    size.classList.add('packet-size')
+    size.textContent = packetSize
+    header.appendChild(size)
+
+    return header
+  }
+}
+
+// singleton with logic
 export default new class Logic {
   constructor() {
+    this.creator = new Creator()
     this.sniffing = false
     this.bindLayout()
     useRemoteConnection(this.handlePacket)
@@ -92,16 +249,7 @@ export default new class Logic {
 
   handlePacket = packet => {
     if (!this.sniffing) return
-    const packetElement = this.constructPacketElement(packet)
-    this.layout.packetsList.appendChild(packetElement)
-  }
-
-  constructPacketElement = packet => {
-    const container = document.createElement('div')
-    container.classList.add('packet')
-    const title = document.createElement('h3')
-    title.textContent = packet.packet_title
-    container.appendChild(title)
-    return container
+    const element = this.creator.createPacketElement(packet)
+    this.layout.packetsList.appendChild(element)
   }
 }

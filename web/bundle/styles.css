@@ -36,6 +36,14 @@ body {
 .control-button {
   border: none;
   width: 60px;
+  background-color: #eee;
+  border-bottom: 2px solid #eee;
+  transition: 0.2s all ease-in-out;
+}
+
+.control-button:hover {
+  background-color: #ccc;
+  border-bottom: 2px solid grey;
 }
 
 .control-status {
